@@ -6,9 +6,13 @@ function Greet(){
 export default Greet;
 */
 
-export const Greet=() => 
-<div>
-    <h1>Hello World, welcome to your first page with react ¡Neiver!</h1>
-    <p>En este apartado estoy haciendo una prueba</p>;  
-</div>
+ const Greet=({imgSrc, name}) => {
+    return(
+        <figure>
+            <img src={imgSrc} alt=""/>
+            <figcaption>{name}</figcaption>
+        </figure>
 
+    );
+ }
+export default Greet;

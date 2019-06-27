@@ -1,28 +1,32 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios'
 import  Greet from './components/Greet'
-import Employee from './components/Employee'
+//import Employee from './Employee'
+import {BASE_LOCAL_ENDPOINT} from './components/constants'
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state={
-        employes:{
+      employes:{
           content: [],
           error: false
-        }
-    },
-    newEmployeeFrom={
-      //..............
-    },
-    createEmployeeError= false
+      },
+     newEmployeeFrom: {
+        name: "",
+        job: "",
+        area: "",
+        imgSrc: "",
+        points: ""
+      },
+      createEmployeeError: false
+    } 
   }
   componentDidMount=()=>{
     this.getEmployees();
   }
   getEmployees =()=>{
-    Axios.get(`${BASE_LOCAL_ENDPOINT  }/employee`)
+    axios.get(`${BASE_LOCAL_ENDPOINT}/employee`)
     .then(response=>{
         this.setState({
           employes:{
@@ -45,22 +49,18 @@ class App extends Component {
     const{
       newEmployeeFrom:{
         name,
-        location,
-        status,
-        species,
-        gender,
-        origin,
-        image        
+        job,
+        area,
+        imgSrc,
+        points      
       }
     }=this.state;
     axios.post(`${BASE_LOCAL_ENDPOINT}/employee`,{
       name,
-      location,
-      status,
-      species,
-      gender,
-      origin,
-      image   
+      job,
+      area,
+      imgSrc,
+      points
     },{
       headers:{"Content-Type": "application/json"}
     })
@@ -68,14 +68,15 @@ class App extends Component {
     .catch(()=> {this.setState({createEmployeeError:true})})
   }
 
-  createTextInput =(value, field)=>{
+  createTextInput =(value, field)=>(
     <input
         required
         type="text"
         placeholder={field}
-        onChange={(e)=> this.handleInputChange(e.target.value, field.)}
+        onChange={(e)=> this.handleInputChange(e.target.value, field)}
+        value={value}
     />
-  }
+  )
 
   handleInputChange =(value, field) =>{
     this.setState(prevState=>({
@@ -92,12 +93,10 @@ class App extends Component {
       employes:{content, error},
       newEmployeeFrom:{
         name,
-        location,
-        status,
-        species,
-        gender,
-        origin,
-        image   
+        job,
+        area,
+        imgSrc,
+        points  
       }
     }= this.state;
     if(error){
@@ -109,15 +108,15 @@ class App extends Component {
             {createEmployeeError && <p>An error ocurred creating employee</p>}
             <form onSubmit={e=> this.createEmployee(e)}>
               {this.createTextInput(name,'name')}
-              {this.createTextInput(location,'location')}
-              {this.createTextInput(status,'status')}
-              {this.createTextInput(species,'species')}
-              {this.createTextInput(origin,'origin')}
-              {this.createTextInput(image,'image')}
+              {this.createTextInput(job,'job')}
+              {this.createTextInput(area,'area')}
+              {this.createTextInput(imgSrc,'image')}
+              {this.createTextInput(points,'points')}
+              <button type="submit">Create</button>              
             </form>
 
-            {content.map(({id, image, name})=>(
-              <Greet key={id} imgSrc={image} name={name}/>
+            {content.map(({id, imgSrc, name})=>(
+              <Greet key={id} imgSrc={imgSrc} name={name}/>
             ))}
         </>
       );
